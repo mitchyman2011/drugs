@@ -9,11 +9,12 @@ def BBoi(B):
     holdyboiy=[]
     holdyboix=[]
     holdyboivol=[]
+    holdyboivolx=[]
     for i in myguy:
         mu=3*10**(-3)#viscoscity of blood
         a=400*10**(-9)#size of particle
         U=[2*10**(-3),0]#inital velocity/velociy of the fluid
-        X0=[0,U[0],i*1/2,U[1]]#inital conditions
+        X0=[0,U[0],i/h,U[1]]#inital conditions
         M=1#mass
         T=100#time factor
         #B=[10**(-6),10**(-4),10**(-3)]#fmag
@@ -33,7 +34,8 @@ def BBoi(B):
         #print(soly.y[3,-1])
         holdyboix.append(soly.y[0])
         holdyboiy.append(soly.y[2])
-        holdyboivol.append(soly.y[1])
+        holdyboivol.append(soly.y[3])
+        holdyboivolx.append(soly.y[1])
         if i-h/2==0:
             plt.plot(L*soly.y[0],h*soly.y[2])
             
@@ -43,7 +45,7 @@ def BBoi(B):
             #print(soly.y_events)
             plt.savefig(f"plots/{B}.png")
             plt.cla()
-            plt.plot(L*soly.y[0],soly.y[1])
+            plt.plot(L*soly.y[0],soly.y[3])
             plt.savefig(f"plots/{B}vol.png")
             plt.cla()
     #print(h)
@@ -63,11 +65,16 @@ def BBoi(B):
         plt.plot(L*holdyboix[i],holdyboivol[i])
     plt.savefig(f"plots/{B}multivol.png")
     plt.cla()
-trils=1   
+    for i in range(len(holdyboiy)):
+        plt.plot(L*holdyboix[i],holdyboivolx[i])
+    plt.savefig(f"plots/{B}multivolx.png")
+    plt.cla()
+trils=10 
 k=np.ones((trils,2))
 for i in range(trils):
-    k[i]=k[i]*10**(i-9)
-BBoi(k[i])
+    k[i,1]=k[i,1]*10**(i-12)
+    k[i,0]=-k[i,0]*10**(i-15)
+#BBoi(k[i])
 if __name__ == '__main__':
     with concurrent.futures.ProcessPoolExecutor() as executor:
         secs = [[10**(-6),10**(-4),10**(-3)]]
