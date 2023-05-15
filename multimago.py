@@ -5,7 +5,7 @@ import concurrent.futures
 import time
 def BBoi(B):
     h=25*10**(-3)#The width of the blood vessel
-    myguy=np.linspace(0,h,5)
+    myguy=np.linspace(0,h,30)
     holdyboiy=[]
     holdyboix=[]
     holdyboivol=[]
@@ -72,7 +72,7 @@ def BBoi(B):
 trils=10 
 k=np.ones((trils,2))
 for i in range(trils):
-    k[i,1]=k[i,1]*10**(i-12)
+    k[i,1]=k[i,1]*10**(i-11)
     k[i,0]=-k[i,0]*10**(i-15)
 #BBoi(k[i])
 if __name__ == '__main__':

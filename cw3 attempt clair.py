@@ -33,7 +33,7 @@ import matplotlib.pyplot as plt
 #To match mago2 file:
 L = 5e-2
 h = 25e-3
-Fmagx = 1e-12
+Fmagx = 1e-11
 Fmagy = 1e-12
 mu = 3e-3
 a = 400e-9
