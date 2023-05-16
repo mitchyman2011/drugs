@@ -79,15 +79,21 @@ U0 = 0.009
 # U0 = 4e-3 
 
 # # # #vein
-# L = 1e-1 
-# h = 5e-3 
-# Fmagx = 1e-7 
-# Fmagy = 1e-7 
-# mu = 3e-3 
-# a = 2.5e-9 
-# U0 = 1e-1 
+L = 1e-1 
+h = 5e-3
+Fmagx = 1e-12
+Fmagy = 1e-11
+mu = 4.5e-3 
+a = 400e-9 
+U0 = 1e-1
 
-
+L = 5e-2
+h = 25e-3
+Fmagx = 1e-11
+Fmagy = 1e-12
+mu = 3e-3
+a = 400e-9
+U0 = 2e-4
 
 
 
