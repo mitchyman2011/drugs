@@ -18,7 +18,7 @@ def BBoi(B):
         U=uy[jef]#[2*10**(-3),0]#inital velocity/velociy of the fluid
         M=1#mass
         L=Ls[jef]#5*10**(-2) #length of the vessel
-        T=100#time factor
+        T=10#time factor
         myguy=np.linspace(0,h,30)
         holdyboiy=[]
         holdyboix=[]
@@ -99,12 +99,13 @@ def BBoi(B):
 trils=12
 frills=12
 f=0
+
 k=np.ones((trils*frills,2))
 for j in range(frills):
    for i in range(trils):
        print(f,j)
        k[f,1]=k[f,1]*10**(j-12)
-       k[f,0]=k[f,0]*10**(i-12)
+       k[f,0]=-k[f,0]*10**(i-12)
        f=f+1
 
 print(k)
