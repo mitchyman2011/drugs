@@ -40,7 +40,7 @@ def BBoi(B):
                 #time.sleep(0.1)
                 return [X[1],(L**(2)*B[0])/(M*U[0]**(2)*h)+((6*np.pi*mu*a*L)/(M*U[0]))*(((6)*X[2]*(1-X[2])-X[1])),X[3],(L**(2)*B[1])/(M*U[0]**(2)*h)-((6*np.pi*mu*a*L)/(M*U[0]))*X[3]]
             myboi.terminal = True
-            soly=solve_ivp(function,(0,T),X0,events=myboi,args=[B,mu,a,U,h,M,L],rtol=1*10**(-5), atol=1*10**(-5))
+            soly=solve_ivp(function,(0,T),X0,events=myboi,args=[B,mu,a,U,h,M,L],rtol=1*10**(-5), atol=1*10**(-5),max_step=10**(-1))
             #print(soly.y[3,-1])
             holdyboix.append(soly.y[0])
             holdyboiy.append(soly.y[2])
