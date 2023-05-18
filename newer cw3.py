@@ -81,7 +81,7 @@ U0 = 0.009
 # # # #vein
 L = 1e-1 
 h = 5e-3
-Fmagx = 1e-12
+Fmagx = -1e-12
 Fmagy = 1e-11
 mu = 4.5e-3 
 a = 400e-9 
@@ -89,7 +89,7 @@ U0 = 1e-1
 
 L = 5e-2
 h = 25e-3
-Fmagx = 1e-11
+Fmagx = -1e-11
 Fmagy = 1e-12
 mu = 3e-3
 a = 400e-9
@@ -161,83 +161,102 @@ def rhs(t, q, L, Fmagx, Fmagy, mu, a, h, U0):
     Xstar = q[0]
     Ystar = q[1]
     # Assign values of dqdtstar
-    dqdtstar[0] = L*Fmagx/(6 * np.pi * mu * a*U0) + 6 * Ystar * (1 - Ystar)
-    dqdtstar[1] = L * Fmagy / (6 * np.pi * mu * a*U0*h)
+    dqdtstar[0] = Fmagx/(6 * np.pi * mu * a*U0) + 6 * Ystar * (1 - Ystar)
+    dqdtstar[1] = L* Fmagy / (6 * np.pi * mu * a*U0*h)
     print(dqdtstar[1])
     # return RHS of the system
     return dqdtstar
 
-
-stopping_cond.terminal = True
-# Define values of time over which to solve the ODE
-tvals = np.linspace(0, 15, 1000)
-
-# Solve the IVP
-sol = solve_ivp(fun=rhs, t_span=[tvals[0], tvals[-1]], y0=[0, 0],
-                events=stopping_cond, t_eval=tvals, args=(L, Fmagx, Fmagy, mu, a, h, U0,))
-
-# sol.y[0] is x pos at each of the tvals points, sol.y[1] is y pos at each of the tvals points
-xsol_nondim = sol.y[0]
-ysol_nondim = sol.y[1]
-
-xsol = L*sol.y[0]
-ysol = h*sol.y[1]
-
-
-plt.subplot(2, 1, 1)
-plt.plot(sol.t, xsol)
-plt.ylabel('x')
-plt.subplot(2, 1, 2)
-plt.plot(sol.t, ysol)
-plt.ylabel('y')
-plt.xlabel('t')
-plt.show()
-
-plt.plot(xsol, ysol)
-# plt.plot(sol.y[0], sol.y[1])
-# Plotting start and end points to see what's going on
-#plt.plot(sol.y[0,0],sol.y[1,0], marker="o", color='red')
-#plt.plot(sol.y[0,50],sol.y[1,50], marker="o", color='orange')
-#plt.plot(sol.y[0,-1],sol.y[1,-1], marker="o", color='blue')
-# print(sol.y_events)
-plt.show()
-
-
-plt.plot(xsol_nondim, ysol_nondim)
-# plt.plot(sol.y[0], sol.y[1])
-# Plotting start and end points to see what's going on
-#plt.plot(sol.y[0,0],sol.y[1,0], marker="o", color='red')
-#plt.plot(sol.y[0,50],sol.y[1,50], marker="o", color='orange')
-#plt.plot(sol.y[0,-1],sol.y[1,-1], marker="o", color='blue')
-# print(sol.y_events)
-plt.show()
-
-# plt.plot(xsol, ysol)
-# # plt.plot(sol.y[0], sol.y[1])
-# #Plotting start and end points to see what's going on
-# plt.plot(sol.y[0,0],sol.y[1,0], marker="o", color='red')
-# plt.plot(sol.y[0,50],sol.y[1,50], marker="o", color='orange')
-# plt.plot(sol.y[0,-1],sol.y[1,-1], marker="o", color='blue')
-# # print(sol.y_events)
-# plt.ylim(0,0.02)
-# plt.show()
-
-
-
-
-#Plot multiple trajectories
-start_pos = np.linspace(0, 1, 30)
-fig1, ax1 = plt.subplots()
-fig2, ax2 = plt.subplots()
-for pos in start_pos:
-    pos_sol = solve_ivp(fun=rhs, t_span=[tvals[0], tvals[-1]], y0=[0, pos], events=stopping_cond, t_eval=tvals, args=(L, Fmagx, Fmagy, mu, a, h, U0,))
-    x_sol = pos_sol.y[0]
-    y_sol = pos_sol.y[1]
-    ax1.plot(x_sol,y_sol)
-    x_sol_dim = L * x_sol
-    y_sol_dim = h * y_sol
-    ax2.plot(x_sol_dim, y_sol_dim)
+names=["artery","arteriole","capillary","venule","vein"]
+hes=[3*10**(-3),3*10**(-5),7*10**(-6),4*10**(-5),5*10**(-3)]
+muy=[4.5*10**(-3),4.5*10**(-3),4.5*10**(-3),4.5*10**(-3),4.5*10**(-3)]
+a=400*10**(-9)#size of particle
+uy=[[1*10**(-1),0],[1*10**(-2),0],[7*10**(-4),0],[4*10**(-3),0],[1*10**(-1),0]]
+Ls=[1*10**(-1),7*10**(-4),6*10**(-4),8*10**(-4),1*10**(-1)]
+b=[[1*10**(-10),1*10**(-10)],[],[],[],[]]
+for jef in range(len(names)):
     
+    h=hes[jef]#25*10**(-3)#The width of the blood vessel
+    mu=muy[jef]#3*10**(-3)#viscoscity of blood
+    U=uy[jef]#[2*10**(-3),0]#inital velocity/velociy of the fluid
+    U0=U[0]
+    B=b[jef]
+    Fmagx = B[0]
+    Fmagy = B[1]
+    print(B[0])
+    M=1#mass
+    L=Ls[jef]#5*10**(-2) #length of the vessel
+    T=10#time factor
+    stopping_cond.terminal = True
+    # Define values of time over which to solve the ODE
+    tvals = np.linspace(0, 15, 1000)
+    
+    # Solve the IVP
+    sol = solve_ivp(fun=rhs, t_span=[tvals[0], tvals[-1]], y0=[0, 0],
+                    events=stopping_cond, t_eval=tvals, args=(L, Fmagx, Fmagy, mu, a, h, U0,),max_step=10**(-3))
+    
+    # sol.y[0] is x pos at each of the tvals points, sol.y[1] is y pos at each of the tvals points
+    xsol_nondim = sol.y[0]
+    ysol_nondim = sol.y[1]
+    
+    xsol = L*sol.y[0]
+    ysol = h*sol.y[1]
+    
+    
+    plt.subplot(2, 1, 1)
+    plt.plot(sol.t, xsol)
+    plt.ylabel('x')
+    plt.subplot(2, 1, 2)
+    plt.plot(sol.t, ysol)
+    plt.ylabel('y')
+    plt.xlabel('t')
+    plt.show()
+    
+    plt.plot(xsol, ysol)
+    # plt.plot(sol.y[0], sol.y[1])
+    # Plotting start and end points to see what's going on
+    #plt.plot(sol.y[0,0],sol.y[1,0], marker="o", color='red')
+    #plt.plot(sol.y[0,50],sol.y[1,50], marker="o", color='orange')
+    #plt.plot(sol.y[0,-1],sol.y[1,-1], marker="o", color='blue')
+    # print(sol.y_events)
+    plt.show()
+    
+    
+    plt.plot(xsol_nondim, ysol_nondim)
+    # plt.plot(sol.y[0], sol.y[1])
+    # Plotting start and end points to see what's going on
+    #plt.plot(sol.y[0,0],sol.y[1,0], marker="o", color='red')
+    #plt.plot(sol.y[0,50],sol.y[1,50], marker="o", color='orange')
+    #plt.plot(sol.y[0,-1],sol.y[1,-1], marker="o", color='blue')
+    # print(sol.y_events)
+    plt.show()
+    
+    # plt.plot(xsol, ysol)
+    # # plt.plot(sol.y[0], sol.y[1])
+    # #Plotting start and end points to see what's going on
+    # plt.plot(sol.y[0,0],sol.y[1,0], marker="o", color='red')
+    # plt.plot(sol.y[0,50],sol.y[1,50], marker="o", color='orange')
+    # plt.plot(sol.y[0,-1],sol.y[1,-1], marker="o", color='blue')
+    # # print(sol.y_events)
+    # plt.ylim(0,0.02)
+    # plt.show()
+    
+    
+    
+    
+    #Plot multiple trajectories
+    start_pos = np.linspace(0, 1, 30)
+    fig1, ax1 = plt.subplots()
+    fig2, ax2 = plt.subplots()
+    for pos in start_pos:
+        pos_sol = solve_ivp(fun=rhs, t_span=[tvals[0], tvals[-1]], y0=[0, pos], events=stopping_cond, t_eval=tvals, args=(L, Fmagx, Fmagy, mu, a, h, U0,))
+        x_sol = pos_sol.y[0]
+        y_sol = pos_sol.y[1]
+        ax1.plot(x_sol,y_sol)
+        x_sol_dim = L * x_sol
+        y_sol_dim = h * y_sol
+        ax2.plot(x_sol_dim, y_sol_dim)
+        
     
     
     

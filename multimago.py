@@ -16,10 +16,10 @@ def BBoi(B):
         h=hes[jef]#25*10**(-3)#The width of the blood vessel
         mu=muy[jef]#3*10**(-3)#viscoscity of blood
         U=uy[jef]#[2*10**(-3),0]#inital velocity/velociy of the fluid
-        M=1#mass
+        M=3.2*10**(-16)#mass
         L=Ls[jef]#5*10**(-2) #length of the vessel
-        T=10#time factor
-        myguy=np.linspace(0,h,30)
+        T=1#time factor
+        myguy=np.linspace(0,h,5)
         holdyboiy=[]
         holdyboix=[]
         holdyboivol=[]
@@ -36,11 +36,11 @@ def BBoi(B):
                 return X[2]-1
             def function(t,X,B,mu,a,U,h,M,L):
                 #print((L**(2)*B[0])/(M*U[0]**(2)*h)+((6*np.pi*mu*a*L)/(M*U[0]))*(((6)*X[2]*(1-X[2])-X[1])))
-                #print(X[1])#,X[2])
+                print(f"vx:{X[1]}",f"y:{X[2]}",f"t:{t}")
                 #time.sleep(0.1)
-                return [X[1],(L**(2)*B[0])/(M*U[0]**(2)*h)+((6*np.pi*mu*a*L)/(M*U[0]))*(((6)*X[2]*(1-X[2])-X[1])),X[3],(L**(2)*B[1])/(M*U[0]**(2)*h)-((6*np.pi*mu*a*L)/(M*U[0]))*X[3]]
+                return [X[1],(L*B[0])/(M*U[0]**(2))+((6*np.pi*mu*a*L)/(M*U[0]))*(((6)*X[2]*(1-X[2])-X[1])),X[3],(L**(2)*B[1])/(M*U[0]**(2)*h)-((6*np.pi*mu*a*L)/(M*U[0]))*X[3]]
             myboi.terminal = True
-            soly=solve_ivp(function,(0,T),X0,events=myboi,args=[B,mu,a,U,h,M,L],rtol=1*10**(-5), atol=1*10**(-5),max_step=10**(-1))
+            soly=solve_ivp(function,(0,T),X0,events=myboi,args=[B,mu,a,U,h,M,L])
             #print(soly.y[3,-1])
             holdyboix.append(soly.y[0])
             holdyboiy.append(soly.y[2])
@@ -96,8 +96,8 @@ def BBoi(B):
         plt.xlabel("Distance along the vessel (m)")
         plt.savefig(f"{names[jef]}/{names[jef]}{B}multivolx.png")
         plt.cla()
-trils=12
-frills=12
+trils=1
+frills=1
 f=0
 
 k=np.ones((trils*frills,2))
