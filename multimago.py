@@ -16,10 +16,12 @@ def BBoi(B):
         h=hes[jef]#25*10**(-3)#The width of the blood vessel
         mu=muy[jef]#3*10**(-3)#viscoscity of blood
         U=uy[jef]#[2*10**(-3),0]#inital velocity/velociy of the fluid
-        M=3.2*10**(-16)#mass
+        M=1#mass
         L=Ls[jef]#5*10**(-2) #length of the vessel
-        T=1#time factor
-        myguy=np.linspace(0,h,5)
+        T=10#time factor
+        
+        myguy=np.linspace(0,h,30)
+    
         holdyboiy=[]
         holdyboix=[]
         holdyboivol=[]
@@ -36,12 +38,11 @@ def BBoi(B):
                 return X[2]-1
             def function(t,X,B,mu,a,U,h,M,L):
                 #print((L**(2)*B[0])/(M*U[0]**(2)*h)+((6*np.pi*mu*a*L)/(M*U[0]))*(((6)*X[2]*(1-X[2])-X[1])))
-                print(f"vx:{X[1]}",f"y:{X[2]}",f"t:{t}")
-                #time.sleep(0.1)
+                print(t,X[2])
                 return [X[1],(L*B[0])/(M*U[0]**(2))+((6*np.pi*mu*a*L)/(M*U[0]))*(((6)*X[2]*(1-X[2])-X[1])),X[3],(L**(2)*B[1])/(M*U[0]**(2)*h)-((6*np.pi*mu*a*L)/(M*U[0]))*X[3]]
             myboi.terminal = True
-            soly=solve_ivp(function,(0,T),X0,events=myboi,args=[B,mu,a,U,h,M,L])
-            #print(soly.y[3,-1])
+            soly=solve_ivp(function,(0,T),X0,events=myboi,args=[B,mu,a,U,h,M,L],rtol=1*10**(-2), atol=1*10**(-2),max_step=10**(-1))
+         
             holdyboix.append(soly.y[0])
             holdyboiy.append(soly.y[2])
             holdyboivol.append(soly.y[3])
@@ -55,7 +56,7 @@ def BBoi(B):
                 plt.title(f"Path of a particle in the {names[jef]} starting at half height")
                 plt.ylabel("The height in The vessel(m)")
                 plt.xlabel("Distance along the vessel (m)")
-                
+
                 #print(soly.y_events)
                 plt.savefig(f"{names[jef]}/{names[jef]}{B}.png")
                 plt.cla()
@@ -64,29 +65,33 @@ def BBoi(B):
                 plt.xlabel("Distance along the vessel (m)")
                 
                 plt.plot(L*soly.y[0],soly.y[3])
+
                 plt.savefig(f"{names[jef]}/{names[jef]}{B}vol.png")
                 plt.cla()
-        #print(h)
+        print(h)
         for i in range(len(holdyboiy)):
             #print(holdyboiy[i])
             
             plt.plot(L*holdyboix[i],h*holdyboiy[i])
               
-            hchy=np.zeros(len(soly.y[0]))
-            hchy=hchy+h
-        plt.plot(L*holdyboix[i],hchy)
+        hchy=np.zeros(len(holdyboiy[0]))
+        hchy=hchy+h
+        plt.plot(L*holdyboix[0],hchy)
         plt.title(f"Path of the particle through the {names[jef]}")
         plt.ylabel("The height in the vessel (m)")
         plt.xlabel("Distance along the vessel (m)")
         
               #print(soly.y_events)
+
         plt.savefig(f"{names[jef]}/{names[jef]}{B}multi.png")
         plt.cla()
         for i in range(len(holdyboiy)):
             plt.plot(L*holdyboix[i],holdyboivol[i])
+        
         plt.title(f"Velocity of the particles in the height of the {names[jef]}")    
         plt.ylabel("Velocity in the hight direction (m/s)")
         plt.xlabel("Distance along the vessel (m)")
+
         plt.savefig(f"{names[jef]}/{names[jef]}{B}multivol.png")
         plt.cla()
         for i in range(len(holdyboiy)):
@@ -94,10 +99,11 @@ def BBoi(B):
         plt.title(f"Velocity of the particles along the {names[jef]}")
         plt.ylabel("Velocity along the vessel (v/m)")
         plt.xlabel("Distance along the vessel (m)")
+
         plt.savefig(f"{names[jef]}/{names[jef]}{B}multivolx.png")
         plt.cla()
-trils=1
-frills=1
+trils=12
+frills=12
 f=0
 
 k=np.ones((trils*frills,2))
@@ -108,7 +114,8 @@ for j in range(frills):
        k[f,0]=-k[f,0]*10**(i-12)
        f=f+1
 
-print(k)
+BBoi([-10**(-12),10**(-12)])
+
 if __name__ == '__main__':
     with concurrent.futures.ProcessPoolExecutor() as executor:
         secs = [[10**(-6),10**(-4),10**(-3)]]

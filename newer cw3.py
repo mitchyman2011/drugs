@@ -173,7 +173,7 @@ muy=[4.5*10**(-3),4.5*10**(-3),4.5*10**(-3),4.5*10**(-3),4.5*10**(-3)]
 a=400*10**(-9)#size of particle
 uy=[[1*10**(-1),0],[1*10**(-2),0],[7*10**(-4),0],[4*10**(-3),0],[1*10**(-1),0]]
 Ls=[1*10**(-1),7*10**(-4),6*10**(-4),8*10**(-4),1*10**(-1)]
-b=[[1*10**(-10),1*10**(-10)],[],[],[],[]]
+b=[[-1*10**(-11),1*10**(-11)],[-1*10**(-10),1*10**(-9)],[-1*10**(-12),1*10**(-12)],[-1*10**(-12),1*10**(-11)],[-1.5*10**(-9),1*10**(-10)]]
 for jef in range(len(names)):
     
     h=hes[jef]#25*10**(-3)#The width of the blood vessel
@@ -210,17 +210,18 @@ for jef in range(len(names)):
     plt.plot(sol.t, ysol)
     plt.ylabel('y')
     plt.xlabel('t')
-    plt.show()
-    
+    plt.savefig(f"clar/{names[jef]}post.png")
+    plt.cla()
     plt.plot(xsol, ysol)
+    
     # plt.plot(sol.y[0], sol.y[1])
     # Plotting start and end points to see what's going on
     #plt.plot(sol.y[0,0],sol.y[1,0], marker="o", color='red')
     #plt.plot(sol.y[0,50],sol.y[1,50], marker="o", color='orange')
     #plt.plot(sol.y[0,-1],sol.y[1,-1], marker="o", color='blue')
     # print(sol.y_events)
-    plt.show()
-    
+    plt.savefig(f"clar/{names[jef]}dist.png")
+    plt.cla()
     
     plt.plot(xsol_nondim, ysol_nondim)
     # plt.plot(sol.y[0], sol.y[1])
@@ -229,7 +230,8 @@ for jef in range(len(names)):
     #plt.plot(sol.y[0,50],sol.y[1,50], marker="o", color='orange')
     #plt.plot(sol.y[0,-1],sol.y[1,-1], marker="o", color='blue')
     # print(sol.y_events)
-    plt.show()
+    plt.savefig(f"clar/{names[jef]}nondim.png")
+    plt.cla()
     
     # plt.plot(xsol, ysol)
     # # plt.plot(sol.y[0], sol.y[1])
@@ -257,7 +259,8 @@ for jef in range(len(names)):
         y_sol_dim = h * y_sol
         ax2.plot(x_sol_dim, y_sol_dim)
         
-    
+    plt.savefig(f"clar/{names[jef]}postmulti.png")
+    plt.cla() 
     
     
     
